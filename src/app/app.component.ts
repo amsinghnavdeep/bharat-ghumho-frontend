@@ -1,0 +1,21 @@
+import { Component, HostListener } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { NavComponent } from './components/nav/nav.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { AuthModalComponent } from './components/auth-modal/auth-modal.component';
+import { AppModalComponent } from './components/app-modal/app-modal.component';
+import { ToastComponent } from './components/toast/toast.component';
+import { BackToTopComponent } from './components/back-to-top/back-to-top.component';
+import { AuthService } from './services/auth.service';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, NavComponent, FooterComponent, AuthModalComponent, AppModalComponent, ToastComponent, BackToTopComponent],
+  template: `<app-nav/><router-outlet/><app-footer/><app-auth-modal/><app-app-modal/><app-toast/><app-back-to-top/>`
+})
+export class AppComponent {
+  constructor(private auth: AuthService) {}
+  @HostListener('document:keydown.escape')
+  onEsc() { this.auth.closeAuth(); this.auth.closeAppModal(); }
+}
