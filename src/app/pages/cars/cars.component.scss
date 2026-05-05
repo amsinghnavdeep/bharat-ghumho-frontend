@@ -1,0 +1,213 @@
+.cars-page {
+    min-height: 100vh;
+    background: #F8FFFA;
+    font-family: 'Segoe UI', sans-serif;
+
+    .search-hero {
+          background: linear-gradient(135deg, #0D3321 0%, #1a5c3a 100%);
+          padding: 60px 24px 40px;
+          text-align: center;
+          color: white;
+
+          h1 {
+                  font-size: 2.5rem;
+                  font-weight: 700;
+                  margin-bottom: 8px;
+
+                  span { color: #FF6B35; }
+      }
+
+          p {
+                  font-size: 1.1rem;
+                  opacity: 0.85;
+                  margin-bottom: 32px;
+      }
+
+          .search-bar {
+                  display: flex;
+                  gap: 12px;
+                  max-width: 640px;
+                  margin: 0 auto;
+
+                  input, select {
+                            flex: 1;
+                            padding: 14px 18px;
+                            border: none;
+                            border-radius: 10px;
+                            font-size: 1rem;
+                            outline: none;
+
+                            &:focus { box-shadow: 0 0 0 3px rgba(57, 211, 83, 0.4); }
+            }
+
+                  button {
+                            padding: 14px 28px;
+                            background: linear-gradient(135deg, #39D353, #2db844);
+                            color: white;
+                            border: none;
+                            border-radius: 10px;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            transition: transform 0.2s, box-shadow 0.2s;
+
+                            &:hover {
+                                        transform: translateY(-2px);
+                                        box-shadow: 0 6px 20px rgba(57, 211, 83, 0.4);
+                    }
+            }
+      }
+  }
+
+    .results-layout {
+          display: flex;
+          gap: 24px;
+          max-width: 1200px;
+          margin: 32px auto;
+          padding: 0 24px;
+
+          .filters {
+                  width: 260px;
+                  flex-shrink: 0;
+                  background: white;
+                  border-radius: 16px;
+                  padding: 24px;
+                  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+                  height: fit-content;
+
+                  h3 {
+                            font-size: 1.1rem;
+                            font-weight: 700;
+                            color: #0D3321;
+                            margin-bottom: 20px;
+                            padding-bottom: 12px;
+                            border-bottom: 2px solid #39D353;
+            }
+
+                  .filter-group {
+                            margin-bottom: 20px;
+
+                            label {
+                                        display: block;
+                                        font-size: 0.85rem;
+                                        font-weight: 600;
+                                        color: #555;
+                                        margin-bottom: 8px;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                    }
+
+                            select {
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border: 2px solid #e8f5e9;
+                                        border-radius: 8px;
+                                        font-size: 0.95rem;
+                                        color: #333;
+                                        outline: none;
+                                        transition: border-color 0.2s;
+
+                                        &:focus { border-color: #39D353; }
+                    }
+            }
+      }
+
+          .car-list {
+                  flex: 1;
+
+                  .results-header {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 20px;
+
+                            h2 {
+                                        font-size: 1.3rem;
+                                        font-weight: 700;
+                                        color: #0D3321;
+                    }
+
+                            .sort-bar {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 10px;
+                                        font-size: 0.9rem;
+                                        color: #666;
+
+                                        select {
+                                                      padding: 8px 12px;
+                                                      border: 2px solid #e8f5e9;
+                                                      border-radius: 8px;
+                                                      font-size: 0.9rem;
+                                                      outline: none;
+
+                                                      &:focus { border-color: #39D353; }
+                              }
+                    }
+            }
+
+                  .car-card {
+                            background: white;
+                            border-radius: 16px;
+                            padding: 24px;
+                            margin-bottom: 20px;
+                            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+                            display: flex;
+                            gap: 20px;
+                            align-items: center;
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            border: 2px solid transparent;
+
+                            &:hover {
+                                        transform: translateY(-3px);
+                                        box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+                                        border-color: #39D353;
+                    }
+
+                            .car-icon {
+                                        font-size: 3rem;
+                                        min-width: 80px;
+                                        text-align: center;
+                    }
+
+                            .car-info {flex-wrap: wrap;
+                                          gap: 12px;
+                                          margin-bottom: 8px;
+
+                                          span {
+                                                          font-size: 0.85rem;
+                                                          color: #666;
+                                                          display: flex;
+                                                          align-items: center;
+                                                          gap: 4px;
+
+                                                          &.badge {
+                                                                            background: #e8f5e9;
+                                                                            color: #0D3321;
+                                                                            padding: 4px 10px;
+                                                                            border-radius: 20px;
+                                                                            font-weight: 600;
+                                            }
+                              }
+                    }
+
+                              .features {
+                                            display: flex;
+                                            gap: 8px;
+                                            flex-wrap: wrap;
+
+                                            .feature-tag {
+                                                            background: #f0fff4;
+                                                            border: 1p
+                                        flex: 1;
+
+                                        h3 {
+                                                      font-size: 1.2rem;
+                                                      font-weight: 700;
+                                                      color: #0D3321;
+                                                      margin-bottom: 6px;
+                              }
+
+                                        .meta {
+                                                      display: flex;
+                                                      
