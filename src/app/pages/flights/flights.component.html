@@ -8,10 +8,15 @@
           <button [class.active]="tripType==='one'" (click)="tripType='one'">One Way</button>
         </div>
         <div class="search-inputs">
-          <div class="input-group">
-            <input type="text" [(ngModel)]="searchFrom" placeholder="From" />
-          </div>
-          <div class="input-group">
+          <div class="input-group"><input type="text" [(ngModel)]="searchFrom" placeholder="From" /></div>
+          <div class="input-group"><input type="text" [(ngModel)]="searchTo" placeholder="To" /></div>
+          <div class="input-group"><input type="date" [(ngModel)]="searchDate" /></div>
+          <div class="input-group" *ngIf="tripType==='round'"><input type="date" [(ngModel)]="searchReturn" placeholder="Return" /></div>
+          <button class="search-btn">Search Flights</button>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="results-section">
     <div class="container">
       <div class="results-layout">
@@ -74,17 +79,4 @@
       </div>
     </div>
   </section>
-          </div>
-            <input type="text" [(ngModel)]="searchTo" placeholder="To" />
-          </div>
-          <div class="input-group">
-            <input type="date" [(ngModel)]="searchDate" />
-          </div>
-          <div class="input-group" *ngIf="tripType==='round'">
-            <input type="date" [(ngModel)]="searchReturn" placeholder="Return" />
-          </div>
-          <button class="search-btn">Search Flights</button>
-        </div>
-      </div>
-    </div>
-  </section>
+</div>
