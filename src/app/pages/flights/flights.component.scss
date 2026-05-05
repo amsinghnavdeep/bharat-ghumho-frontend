@@ -1,0 +1,61 @@
+:host { display: block; }
+.flights-page { background: #F0FFF4; min-height: 100vh; }
+.search-hero { background: linear-gradient(135deg, #0D3321 0%, #1a5c38 100%); padding: 60px 0 40px;
+  h1 { color: #fff; text-align: center; font-size: 2rem; margin-bottom: 24px; }
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.search-bar { background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border-radius: 16px; padding: 24px; }
+.trip-toggle { display: flex; gap: 8px; margin-bottom: 16px;
+  button { padding: 8px 20px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.4); background: transparent; color: #fff; cursor: pointer;
+    &.active { background: #39D353; border-color: #39D353; color: #0D3321; font-weight: 600; }
+  }
+}
+.search-inputs { display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  .input-group { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 14px; flex: 1; min-width: 160px;
+    input { background: transparent; border: none; outli
+.flight-list { display: flex; flex-direction: column; gap: 16px; }
+.results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; color: #6B9E7A; font-size: 0.9rem;
+  .route-label { font-weight: 600; color: #0D3321; }
+}
+.flight-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(13,51,33,0.08); border: 1.5px solid transparent; transition: border-color 0.2s;
+  &:hover { border-color: #39D353; }
+  &.expanded { border-color: #39D353; }
+  .card-main { display: grid; grid-template-columns: 200px 1fr auto; gap: 24px; align-items: center; padding: 20px 24px; cursor: pointer; }
+  .airline-info { display: flex; align-items: center; gap: 12px;
+    .airline-badge { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .airline-name { strong { display: block; color: #0D3321; font-size: 0.95rem; } span { color: #6B9E7A; font-size: 0.8rem; } }
+  }
+  .flight-times { display: flex; align-items: center; gap: 16px;
+    .time-block { text-align: center; .time { display: block; font-size: 1.3rem; font-weight: 700; color: #0D3321; } .city { font-size: 0.8rem; color: #6B9E7A; } }
+    .duration-block { flex: 1; text-align: center; .duration { display: block; font-size: 0.85rem; color: #6B9E7A; } }
+    .stops-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
+      &.nonstop { background: #e8fdf0; color: #39D353; }
+      &.one-stop { background: #fff3ee; color: #FF6B35; }
+    }
+  }
+  .price-block { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+    .price { font-size: 1.6rem; font-weight: 700; color: #0D3321; }
+    .per { font-size: 0.78rem; color: #6B9E7A; }
+    .book-btn { background: #39D353; color: #0D3321; border: none; border-radius: 8px; padding: 8px 20px; font-weight: 600; cursor: pointer; &:hover { background: #2db845; } }
+  }
+  .card-details { padding: 16px 24px; border-top: 1px solid #e8f5ef; background: #F8FFFA;
+    .details-grid { display: flex; gap: 24px; flex-wrap: wrap;
+      .detail-item { color: #0D3321; font-size: 0.88rem; padding: 6px 12px; background: #e8fdf0; border-radius: 8px; }
+    }
+  }
+}
+.no-results { text-align: center; padding: 60px 20px; color: #6B9E7A; }
+@media (max-width: 768px) { .results-layout { grid-template-columns: 1fr; } .flight-card .card-main { grid-template-columns: 1fr; gap: 16px; } }ne: none; color: #fff; font-size: 0.95rem; width: 100%; &::placeholder { color: rgba(255,255,255,0.6); } }
+  }
+  .search-btn { background: #FF6B35; color: #fff; border: none; border-radius: 10px; padding: 12px 28px; font-size: 1rem; font-weight: 600; cursor: pointer; &:hover { background: #e55c26; } }
+}
+.results-section { padding: 40px 0; }
+.results-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+.filters { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(13,51,33,0.08); position: sticky; top: 80px;
+  h3 { color: #0D3321; font-size: 1.1rem; margin-bottom: 20px; }
+  .filter-group { margin-bottom: 20px;
+    label { display: block; color: #6B9E7A; font-size: 0.85rem; margin-bottom: 8px; }
+    select { width: 100%; padding: 8px 12px; border: 1.5px solid #e0f0e8; border-radius: 8px; color: #0D3321; background: #F0FFF4; font-size: 0.9rem; outline: none; }
+    .range-slider { width: 100%; accent-color: #39D353; }
+  }
+}
