@@ -1,45 +1,63 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ApiService } from './api.service';
 import { Flight, PopularRoute } from '../models';
 
-const FALLBACK_FLIGHTS: Flight[] = [
-  { id:'BG-1001',airline:'Air India',code:'AI',flight:'AI 302',aircraft:'Boeing 777-300ER',color:'#E23744',from:'YYZ',to:'DEL',depTime:'21:45',arrTime:'22:05',arrDay:'+1',duration:'14h 20m',durationMin:860,stops:0,stopsLabel:'Non-stop',stopsClass:'direct',price:687,cabin:'Economy' },
-  { id:'BG-1002',airline:'British Airways',code:'BA',flight:'BA 036 / BA 143',aircraft:'via London',color:'#00256C',from:'YYZ',to:'DEL',depTime:'19:30',arrTime:'23:15',arrDay:'+1',duration:'17h 45m',durationMin:1065,stops:1,stopsLabel:'1 stop LHR',stopsClass:'one',price:612,cabin:'Economy' },
-  { id:'BG-1003',airline:'Emirates',code:'EK',flight:'EK 242 / EK 510',aircraft:'via Dubai',color:'#C6A962',from:'YYZ',to:'DEL',depTime:'22:15',arrTime:'03:25',arrDay:'+2',duration:'19h 10m',durationMin:1150,stops:1,stopsLabel:'1 stop DXB',stopsClass:'one',price:724,cabin:'Economy' },
-  { id:'BG-1004',airline:'Air Canada',code:'AC',flight:'AC 042',aircraft:'Boeing 787-9',color:'#D81921',from:'YYZ',to:'DEL',depTime:'20:30',arrTime:'21:10',arrDay:'+1',duration:'14h 40m',durationMin:880,stops:0,stopsLabel:'Non-stop',stopsClass:'direct',price:742,cabin:'Economy' },
-  { id:'BG-1005',airline:'Lufthansa',code:'LH',flight:'LH 471 / LH 760',aircraft:'via Frankfurt',color:'#05164D',from:'YYZ',to:'DEL',depTime:'17:00',arrTime:'18:30',arrDay:'+1',duration:'18h 30m',durationMin:1110,stops:1,stopsLabel:'1 stop FRA',stopsClass:'one',price:598,cabin:'Economy' }
-];
-
-const FALLBACK_ROUTES: PopularRoute[] = [
-  { from:'Toronto',fromCode:'YYZ',to:'Delhi',toCode:'DEL',region:'North America',tag:'Diwali Peak',tagClass:'sf',priceFrom:589,currency:'USD' },
-  { from:'Vancouver',fromCode:'YVR',to:'Mumbai',toCode:'BOM',region:'North America',tag:'Most Popular',tagClass:'gr',priceFrom:612,currency:'USD' },
-  { from:'London',fromCode:'LHR',to:'Bangalore',toCode:'BLR',region:'United Kingdom',tag:'Tech Corridor',tagClass:'sf',priceFrom:342,currency:'GBP' },
-  { from:'Dubai',fromCode:'DXB',to:'Kerala',toCode:'COK',region:'Middle East',tag:'Top Route',tagClass:'gr',priceFrom:890,currency:'AED' },
-  { from:'Sydney',fromCode:'SYD',to:'Hyderabad',toCode:'HYD',region:'Australia',tag:'Growing Fast',tagClass:'sf',priceFrom:680,currency:'AUD' },
-  { from:'Singapore',fromCode:'SIN',to:'Chennai',toCode:'MAA',region:'Southeast Asia',tag:'Quick Hop',tagClass:'gr',priceFrom:245,currency:'USD' }
-];
-
 @Injectable({ providedIn: 'root' })
-export class FlightService {
-  constructor(private api: ApiService) {}
+  export class FlightService {
+    private api = '/api';
+    constructor(private http: HttpClient) {}
 
-  search(from: string, to: string, sort = 'price'): Observable<Flight[]> {
-    return this.api.get<{ flights: Flight[] }>('/flights/search', { from, to, sort }).pipe(
-      map(r => r.flights || []), catchError(() => of(FALLBACK_FLIGHTS))
-    );
+  search(from: string, to: string, sort = 'price', page = 1, limit = 10, maxPrice?: number, stops?: number): Observable>Flight[]> {
+        let p = new HttpParams().set('from', from).set('to', to).set('sort', sort)
+          .set('page', String(page)).set('limit', String(limit));
+        if (maxPrice) p = p.set('max_price', String(maxPrice));
+        if (stops !== undefined) p = p.set('stops', String(stops));
+        return this.http.get>any>(`${this.api}/flights/search`, { params: p }).pipe(
+                map((r: any) => r.results || r || []),
+                catchError(() => of([]))
+              );
   }
 
-  getRoutes(): Observable<PopularRoute[]> {
-    return this.api.get<{ routes: PopularRoute[] }>('/flights/routes').pipe(
-      map(r => r.routes || []), catchError(() => of(FALLBACK_ROUTES))
-    );
+  getRoutes(): Observable>PopularRoute[]> {
+        return this.http.get>any[]>(`${this.api}/flights/routes`).pipe(
+                map((rs: any[]) => rs.map(r => this.enrich(r))),
+                catchError(() => of(this.fallbackRoutes()))
+              );
   }
 
-  multiCity(legs: { from: string; to: string; date?: string }[]): Observable<any> {
-    return this.api.post('/flights/multi-city', { legs }).pipe(
-      catchError(() => of({ legs: [], estimatedMinTotal: 0 }))
-    );
+  multiCity(legs: {from:string;to:string;date:string}[]): Observable>any> {
+        return this.http.post(`${this.api}/flights/multi-city`, { legs })
+          .pipe(catchError(() => of({ results: [] })));
+  }
+
+  getAirlines(): Observable>any[]> {
+        return this.http.get>any[]>(`${this.api}/flights/airlines`)
+                .pipe(catchError(() => of([])));
+  }
+
+  private enrich(r: any): PopularRoute {
+        const flags: Record>string,string> = { 'Canada':'','USA':'','UK':'','UAE':'','Australia':'','Singapore':'' };
+        const cities: Record>string,string> = {
+                'Canada':'Toronto  Vancouver  Calgary','USA':'New York  San Francisco  Chicago',
+                'UK':'London  Birmingham  Manchester','UAE':'Dubai  Abu Dhabi  Sharjah',
+                'Australia':'Sydney  Melbourne  Perth','Singapore':'Singapore  Direct 8 cities'
+        };
+        const tagCls: Record>string,string> = { 'Most Popular':'tag-hot','Best Value':'tag-deal','Direct Flights':'tag-direct','Lowest Fares':'tag-hot','New Routes':'tag-new','Fastest':'tag-deal' };
+        const k = Object.keys(flags).find(x => r.region?.includes(x)) || '';
+        const sym = r.currency==='GBP' ? '' : r.currency==='AED' ? 'AED ' : r.currency==='AUD' ? 'A$' : '$';
+        return { ...r, flag: flags[k]||'', cities: cities[k]||'', priceLabel: sym+r.price_from, airlineCount: r.airlines_count||12, tagClass: tagCls[r.tag]||'tag-deal' } as PopularRoute;
+  }
+
+  fallbackRoutes(): PopularRoute[] {
+        return [
+          { id:'r1',flag:'',region:'Canada Corridor',from:'Toronto',fromCode:'YYZ',to:'New Delhi',toCode:'DEL',cities:'Toronto  Vancouver  Calgary',tag:'Most Popular',tagClass:'tag-hot',priceLabel:'$680',airlineCount:12,currency:'CAD',price_from:680 },
+          { id:'r2',flag:'',region:'USA Corridor',from:'New York',fromCode:'JFK',to:'Mumbai',toCode:'BOM',cities:'NYC  San Francisco  Chicago',tag:'Best Value',tagClass:'tag-deal',priceLabel:'$620',airlineCount:18,currency:'USD',price_from:620 },
+          { id:'r3',flag:'',region:'UK Corridor',from:'London',fromCode:'LHR',to:'Delhi',toCode:'DEL',cities:'London  Birmingham  Manchester',tag:'Direct Flights',tagClass:'tag-direct',priceLabel:'420',airlineCount:15,currency:'GBP',price_from:420 },
+          { id:'r4',flag:'',region:'UAE Corridor',from:'Dubai',fromCode:'DXB',to:'Kerala',toCode:'COK',cities:'Dubai  Abu Dhabi  Sharjah',tag:'Lowest Fares',tagClass:'tag-hot',priceLabel:'AED 660',airlineCount:20,currency:'AED',price_from:660 },
+          { id:'r5',flag:'',region:'Australia Corridor',from:'Sydney',fromCode:'SYD',to:'Delhi',toCode:'DEL',cities:'Sydney  Melbourne  Perth',tag:'New Routes',tagClass:'tag-new',priceLabel:'A$750',airlineCount:10,currency:'AUD',price_from:750 },
+          { id:'r6',flag:'',region:'Singapore Corridor',from:'Singapore',fromCode:'SIN',to:'Chennai',toCode:'MAA',cities:'Singapore  Direct 8 cities',tag:'Fastest',tagClass:'tag-deal',priceLabel:'$220',airlineCount:14,currency:'USD',price_from:220 }
+              ] as any[];
   }
 }
