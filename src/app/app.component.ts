@@ -12,7 +12,7 @@ import { AuthService } from './services/auth.service';
     selector: 'app-root',
     standalone: true,
     imports: [RouterOutlet, NavComponent, FooterComponent, AuthModalComponent, AppModalComponent, ToastComponent, BackToTopComponent],
-    template: `>app-nav/>>router-outlet/>>app-footer/>>app-auth-modal/>>app-app-modal/>>app-toast/>>app-back-to-top/>`
+    template: `<app-nav></app-nav><router-outlet></router-outlet><app-footer></app-footer><app-auth-modal></app-auth-modal><app-app-modal></app-app-modal><app-toast></app-toast><app-back-to-top></app-back-to-top>`
 })
   export class AppComponent implements AfterViewInit {
     constructor(private auth: AuthService) {}
