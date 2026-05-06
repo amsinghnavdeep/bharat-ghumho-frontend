@@ -1,4 +1,4 @@
-): any[]): any[]import { Component } from '@angular/core';
+]import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -34,7 +34,7 @@ interface Car {
     { id:'c8',name:'Maruti Ertiga',brand:'Maruti Suzuki',type:'suv',seats:7,transmission:'Manual',fuel:'Petrol',price:2800,image:'suv',features:['AC','Bluetooth','USB'],rating:4.0,available:true }
       ];
 
-  get filteredCars(): Car[] {
+  get filteredCars(): any[] {
         return this.cars
           .filter(c => this.filterType==='all' || c.type===this.filterType)
           .filter(c => c.price>=this.maxPrice)
