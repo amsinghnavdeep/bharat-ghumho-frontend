@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -9,13 +9,28 @@ import { BackToTopComponent } from './components/back-to-top/back-to-top.compone
 import { AuthService } from './services/auth.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, NavComponent, FooterComponent, AuthModalComponent, AppModalComponent, ToastComponent, BackToTopComponent],
-  template: `<app-nav/><router-outlet/><app-footer/><app-auth-modal/><app-app-modal/><app-toast/><app-back-to-top/>`
+    selector: 'app-root',
+    standalone: true,
+    imports: [RouterOutlet, NavComponent, FooterComponent, AuthModalComponent, AppModalComponent, ToastComponent, BackToTopComponent],
+    template: `>app-nav/>>router-outlet/>>app-footer/>>app-auth-modal/>>app-app-modal/>>app-toast/>>app-back-to-top/>`
 })
-export class AppComponent {
-  constructor(private auth: AuthService) {}
+  export class AppComponent implements AfterViewInit {
+    constructor(private auth: AuthService) {}
+
   @HostListener('document:keydown.escape')
-  onEsc() { this.auth.closeAuth(); this.auth.closeAppModal(); }
+    onEsc() { this.auth.closeAuth(); this.auth.closeAppModal(); }
+
+  ngAfterViewInit() {
+        const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                          if (entry.isIntersecting) {
+                                      entry.target.classList.add('v');
+                                      observer.unobserve(entry.target);
+                          }
+                });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        setTimeout(() => {
+                document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+        }, 150);
+  }
 }
