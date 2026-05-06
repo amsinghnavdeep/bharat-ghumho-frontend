@@ -9,42 +9,42 @@ import { Flight, PopularRoute } from '../models';
     private api = '/api';
     constructor(private http: HttpClient) {}
 
-  search(from: string, to: string, sort = 'price', page = 1, limit = 10, maxPrice?: number, stops?: number): Observable>Flight[]> {
+  search(from: string, to: string, sort = 'price', page = 1, limit = 10, maxPrice?: number, stops?: number): Observable<Flight[]> {
         let p = new HttpParams().set('from', from).set('to', to).set('sort', sort)
           .set('page', String(page)).set('limit', String(limit));
         if (maxPrice) p = p.set('max_price', String(maxPrice));
         if (stops !== undefined) p = p.set('stops', String(stops));
-        return this.http.get>any>(`${this.api}/flights/search`, { params: p }).pipe(
+        return this.http.get<any>(`${this.api}/flights/search`, { params: p }).pipe(
                 map((r: any) => r.results || r || []),
                 catchError(() => of([]))
               );
   }
 
-  getRoutes(): Observable>PopularRoute[]> {
-        return this.http.get>any[]>(`${this.api}/flights/routes`).pipe(
+  getRoutes(): Observable<PopularRoute[]> {
+        return this.http.get<any[]>(`${this.api}/flights/routes`).pipe(
                 map((rs: any[]) => rs.map(r => this.enrich(r))),
                 catchError(() => of(this.fallbackRoutes()))
               );
   }
 
-  multiCity(legs: {from:string;to:string;date:string}[]): Observable>any> {
+  multiCity(legs: {from:string;to:string;date:string}[]): Observable<any> {
         return this.http.post(`${this.api}/flights/multi-city`, { legs })
           .pipe(catchError(() => of({ results: [] })));
   }
 
-  getAirlines(): Observable>any[]> {
-        return this.http.get>any[]>(`${this.api}/flights/airlines`)
+  getAirlines(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.api}/flights/airlines`)
                 .pipe(catchError(() => of([])));
   }
 
   private enrich(r: any): PopularRoute {
-        const flags: Record>string,string> = { 'Canada':'','USA':'','UK':'','UAE':'','Australia':'','Singapore':'' };
-        const cities: Record>string,string> = {
+        const flags: Record<string, string> = { 'Canada':'','USA':'','UK':'','UAE':'','Australia':'','Singapore':'' };
+        const cities: Record<string, string> = {
                 'Canada':'Toronto  Vancouver  Calgary','USA':'New York  San Francisco  Chicago',
                 'UK':'London  Birmingham  Manchester','UAE':'Dubai  Abu Dhabi  Sharjah',
                 'Australia':'Sydney  Melbourne  Perth','Singapore':'Singapore  Direct 8 cities'
         };
-        const tagCls: Record>string,string> = { 'Most Popular':'tag-hot','Best Value':'tag-deal','Direct Flights':'tag-direct','Lowest Fares':'tag-hot','New Routes':'tag-new','Fastest':'tag-deal' };
+        const tagCls: Record<string, string> = { 'Most Popular':'tag-hot','Best Value':'tag-deal','Direct Flights':'tag-direct','Lowest Fares':'tag-hot','New Routes':'tag-new','Fastest':'tag-deal' };
         const k = Object.keys(flags).find(x => r.region?.includes(x)) || '';
         const sym = r.currency==='GBP' ? '' : r.currency==='AED' ? 'AED ' : r.currency==='AUD' ? 'A$' : '$';
         return { ...r, flag: flags[k]||'', cities: cities[k]||'', priceLabel: sym+r.price_from, airlineCount: r.airlines_count||12, tagClass: tagCls[r.tag]||'tag-deal' } as PopularRoute;
