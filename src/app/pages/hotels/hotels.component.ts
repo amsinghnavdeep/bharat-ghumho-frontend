@@ -1,4 +1,4 @@
-any[]import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -35,7 +35,7 @@ interface Hotel {
     { id:'h8',name:'ibis New Delhi',location:'Aerocity, New Delhi',stars:3,rating:3.8,reviews:432,price:4200,image:'',amenities:['Restaurant','WiFi','Parking'],description:'Smart budget choice near airport',category:'budget' }
       ];
 
-  get filteredHotels(): Hotel[] {
+  get filteredHotels(): any[] {
         return this.hotels
           .filter(h => this.filterCategory==='all' || h.category===this.filterCategory)
           .filter(h => h.price>=this.maxPrice)
