@@ -1,1 +1,1 @@
-export const environment = { production: true, apiUrl: 'https://api.bharatgumho.com/api' };
+export const environment = { production: true, apiUrl: 'https://bharat-ghumho-backend-production.up.railway.app' };
