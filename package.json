@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@angular/animations": "^17.3.0",
+    "@angular/cdk": "^17.3.0",
     "@angular/common": "^17.3.0",
     "@angular/compiler": "^17.3.0",
     "@angular/core": "^17.3.0",
@@ -16,7 +17,10 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "chart.js": "^4.4.0",
+    "ng2-charts": "^5.0.0",
     "rxjs": "~7.8.0",
+    "swiper": "^11.0.0",
     "three": "^0.162.0",
     "tslib": "^2.6.0",
     "zone.js": "~0.14.0"

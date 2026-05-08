@@ -15,17 +15,28 @@ export class ApiService {
     return h;
   }
 
-  get<T>(path: string, params?: Record<string, any>): Observable<T> {
+  private buildParams(params?: Record<string, unknown>): HttpParams {
     let p = new HttpParams();
-    if (params) Object.keys(params).forEach(k => { if (params[k] !== undefined) p = p.set(k, params[k]); });
-    return this.http.get<T>(this.base + path, { headers: this.headers(), params: p });
+    if (params) Object.keys(params).forEach(k => {
+      const v = params[k];
+      if (v !== undefined && v !== null && v !== '') p = p.set(k, String(v));
+    });
+    return p;
   }
 
-  post<T>(path: string, body: any): Observable<T> {
+  get<T>(path: string, params?: Record<string, unknown>): Observable<T> {
+    return this.http.get<T>(this.base + path, { headers: this.headers(), params: this.buildParams(params) });
+  }
+
+  post<T>(path: string, body: unknown): Observable<T> {
     return this.http.post<T>(this.base + path, body, { headers: this.headers() });
   }
 
-  put<T>(path: string, body: any): Observable<T> {
+  put<T>(path: string, body: unknown): Observable<T> {
     return this.http.put<T>(this.base + path, body, { headers: this.headers() });
+  }
+
+  delete<T>(path: string): Observable<T> {
+    return this.http.delete<T>(this.base + path, { headers: this.headers() });
   }
 }
