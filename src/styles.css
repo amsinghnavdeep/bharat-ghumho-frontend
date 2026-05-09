@@ -21,13 +21,12 @@
   --font-display:'Poppins','Inter',system-ui,sans-serif;
 }
 html[data-theme="dark"]{
-  --white:#0F1729;--page:#0B1120;--surface:#101A33;
+  --page:#0B1120;--surface:#101A33;
   --border:#1F2A47;--border-light:#172037;
   --text-1:#F5F7FB;--text-2:#C5CCDB;--text-3:#7A8499;
   --saffron-light:rgba(255,107,0,.12);
   --green-light:rgba(19,136,8,.12);
   --gold-light:rgba(212,168,67,.12);
-  --cream:#1A2540;--ivory:#0F1729;
   --shadow-sm:0 2px 8px rgba(0,0,0,.4);--shadow-md:0 8px 30px rgba(0,0,0,.45);--shadow-lg:0 20px 50px rgba(0,0,0,.55);
 }
 html[data-theme="dark"] body{background:var(--page);color:var(--text-1)}
@@ -270,7 +269,7 @@ html[data-theme="dark"] .nav-inner{background:rgba(7,11,22,.92)}
 .mini-leg .arrow{color:var(--gold)}
 
 /* ===== ROUTES ===== */
-.routes{padding:120px 0;background:var(--white);border-top:1px solid var(--border-light);position:relative}
+.routes{padding:120px 0;background:var(--surface);border-top:1px solid var(--border-light);position:relative}
 .routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .route-card{background:var(--page);border:1px solid var(--border-light);border-radius:var(--r-lg);padding:32px 28px;transition:all .45s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;cursor:pointer}
 .route-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--saffron),var(--gold),var(--green));transform:scaleX(0);transition:transform .45s;transform-origin:left}
