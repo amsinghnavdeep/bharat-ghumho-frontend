@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-hero', standalone: true, imports: [CommonModule],
   template: `
 <section class="hero" id="hero">
-<canvas #globeCanvas class="globe-canvas"></canvas>
+<canvas #globeCanvas id="globeCanvas" class="globe-canvas"></canvas>
 <div class="hero-overlay"></div>
 <div class="hero-particles" id="particles">
   <div *ngFor="let p of particles" class="particle"

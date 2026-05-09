@@ -39,6 +39,19 @@ import { Component } from '@angular/core';
       <a href="#">Cookie Policy</a>
     </div>
   </div>
-</div></footer>`
+</div></footer>`,
+  styles: [`
+    .footer-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .footer-brand { max-width: 280px; }
+    .footer-logo { font-size: 18px; font-weight: 800; color: #0B1120; margin-bottom: 8px; }
+    .footer-logo em { font-style: normal; color: #FF6B00; }
+    .footer-tagline { font-size: 13px; color: #8B95A5; margin-bottom: 6px; }
+    .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+    .footer-col { display: flex; flex-direction: column; gap: 8px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #3D4A5C; margin-bottom: 4px; }
+    .footer-col a { font-size: 13px; color: #8B95A5; text-decoration: none; }
+    .footer-col a:hover { color: #0B1120; }
+    @media(max-width:768px) { .footer-inner { flex-direction: column; } .footer-links { gap: 24px; } }
+  `]
 })
 export class FooterComponent {}
