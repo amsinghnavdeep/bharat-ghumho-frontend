@@ -98,9 +98,11 @@ export interface HolidayPackage {
 export interface Weather {
   city: string;
   temp_c: number;
+  temp?: number;
   feels_like?: number;
   humidity?: number;
   wind_kph?: number;
+  wind_speed?: number;
   condition: string;
   icon?: string;
   updated_at?: string;
@@ -110,6 +112,8 @@ export interface ForecastDay {
   date: string;
   temp_min: number;
   temp_max: number;
+  min?: number;
+  max?: number;
   condition: string;
   icon?: string;
 }
@@ -210,13 +214,15 @@ export interface FareAlert {
   to: string;
   target_price: number;
   currency: string;
+  email?: string;
   active?: boolean;
   created_at?: string;
 }
 
 export interface FareAlertCreate {
-  from: string;
+  frm: string;
   to: string;
   target_price: number;
+  email: string;
   currency?: string;
 }

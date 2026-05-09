@@ -13,15 +13,15 @@ export class HotelService {
     if (city) params['city'] = city;
     if (maxPrice) params['max_price'] = maxPrice;
     if (minStars) params['min_stars'] = minStars;
-    return this.api.get<{ results: Hotel[] }>('/hotels/search', params).pipe(
-      map(r => r?.results ?? []),
+    return this.api.get<{ hotels?: Hotel[]; results?: Hotel[] } | Hotel[]>('/hotels/search', params).pipe(
+      map(r => Array.isArray(r) ? r : (r?.hotels ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }
 
   list(): Observable<Hotel[]> {
-    return this.api.get<{ results: Hotel[] } | Hotel[]>('/hotels').pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ hotels?: Hotel[]; results?: Hotel[] } | Hotel[]>('/hotels').pipe(
+      map(r => Array.isArray(r) ? r : (r?.hotels ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }
@@ -31,8 +31,8 @@ export class HotelService {
   }
 
   byCity(code: string): Observable<Hotel[]> {
-    return this.api.get<{ results: Hotel[] } | Hotel[]>(`/hotels/city/${code}`).pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ hotels?: Hotel[]; results?: Hotel[] } | Hotel[]>(`/hotels/city/${code}`).pipe(
+      map(r => Array.isArray(r) ? r : (r?.hotels ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }

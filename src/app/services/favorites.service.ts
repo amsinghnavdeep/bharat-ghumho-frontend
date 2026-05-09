@@ -11,10 +11,14 @@ export class FavoritesService {
   constructor(private api: ApiService) {}
 
   list(type?: string): Observable<Favorite[]> {
+    if (typeof window !== 'undefined' && !localStorage.getItem('bg_token')) {
+      this.favorites.set([]);
+      return of([]);
+    }
     const params: Record<string, unknown> = {};
     if (type && type !== 'all') params['type'] = type;
-    return this.api.get<{ results: Favorite[] } | Favorite[]>('/favorites', params).pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ favorites?: Favorite[]; results?: Favorite[] } | Favorite[]>('/favorites', params).pipe(
+      map(r => Array.isArray(r) ? r : (r?.favorites ?? r?.results ?? [])),
       tap(f => this.favorites.set(f)),
       catchError(() => of([]))
     );
