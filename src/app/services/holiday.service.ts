@@ -13,8 +13,8 @@ export class HolidayService {
     if (theme && theme !== 'all') params['theme'] = theme;
     if (budget) params['budget'] = budget;
     if (days) params['days'] = days;
-    return this.api.get<{ results: HolidayPackage[] } | HolidayPackage[]>('/holidays', params).pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ packages?: HolidayPackage[]; results?: HolidayPackage[] } | HolidayPackage[]>('/holidays', params).pipe(
+      map(r => Array.isArray(r) ? r : (r?.packages ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }

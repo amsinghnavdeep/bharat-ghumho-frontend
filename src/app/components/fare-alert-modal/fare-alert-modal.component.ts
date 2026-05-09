@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AlertsService } from '../../services/alerts.service';
+import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -32,6 +33,10 @@ import { ToastService } from '../../services/toast.service';
         <option *ngFor="let c of ['CAD','USD','GBP','EUR','AED','INR']">{{c}}</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="email" placeholder="you@example.com" />
+    </div>
     <button class="s-btn" style="width:100%" (click)="submit()" [disabled]="saving()">
       {{saving() ? 'Saving…' : 'Create Alert'}}
     </button>
@@ -57,17 +62,23 @@ export class FareAlertModalComponent {
   to = 'DEL';
   target = 600;
   currency = 'CAD';
+  email = '';
   saving = signal(false);
 
-  constructor(private alerts: AlertsService, private toast: ToastService) {}
+  constructor(private alerts: AlertsService, private auth: AuthService, private toast: ToastService) {
+    this.email = this.auth.userSignal()?.email ?? '';
+  }
 
   submit() {
     if (!this.from || !this.to || !this.target) { this.toast.show('Please fill in all fields'); return; }
+    const email = this.email || this.auth.userSignal()?.email || '';
+    if (!email) { this.toast.show('Please enter an email for alerts'); return; }
     this.saving.set(true);
     this.alerts.create({
-      from: this.from.toUpperCase(),
+      frm: this.from.toUpperCase(),
       to: this.to.toUpperCase(),
       target_price: Number(this.target),
+      email,
       currency: this.currency
     }).subscribe(r => {
       this.saving.set(false);

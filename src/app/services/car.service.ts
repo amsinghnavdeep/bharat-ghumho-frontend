@@ -13,8 +13,8 @@ export class CarService {
     if (city) params['city'] = city;
     if (type && type !== 'all') params['type'] = type;
     if (maxPrice) params['max_price'] = maxPrice;
-    return this.api.get<{ results: Car[] } | Car[]>('/cars/search', params).pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ cars?: Car[]; results?: Car[] } | Car[]>('/cars/search', params).pipe(
+      map(r => Array.isArray(r) ? r : (r?.cars ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }
@@ -27,8 +27,8 @@ export class CarService {
   }
 
   byCity(code: string): Observable<Car[]> {
-    return this.api.get<{ results: Car[] } | Car[]>(`/cars/city/${code}`).pipe(
-      map(r => Array.isArray(r) ? r : (r?.results ?? [])),
+    return this.api.get<{ cars?: Car[]; results?: Car[] } | Car[]>(`/cars/city/${code}`).pipe(
+      map(r => Array.isArray(r) ? r : (r?.cars ?? r?.results ?? [])),
       catchError(() => of([]))
     );
   }

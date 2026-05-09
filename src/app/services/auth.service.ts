@@ -17,7 +17,13 @@ export class AuthService {
   isAuthenticated = computed(() => this.userSignal() !== null);
 
   constructor(private api: ApiService) {
-    if (typeof window !== 'undefined' && localStorage.getItem('bg_token')) this.loadProfile();
+    if (typeof window !== 'undefined' && localStorage.getItem('bg_token')) {
+      const cached = localStorage.getItem('bg_user');
+      if (cached) {
+        try { this.setUser(JSON.parse(cached) as User); } catch { /* ignore corrupt cache */ }
+      }
+      this.loadProfile();
+    }
   }
 
   openAuth(signUp = false) { this.isSignUp.set(signUp); this.showAuthModal.set(true); }
@@ -29,6 +35,10 @@ export class AuthService {
   private setUser(u: User | null) {
     this.currentUser.next(u);
     this.userSignal.set(u);
+    if (typeof window !== 'undefined') {
+      if (u) localStorage.setItem('bg_user', JSON.stringify(u));
+      else localStorage.removeItem('bg_user');
+    }
   }
 
   register(name: string, email: string, password: string): Observable<AuthResponse> {
