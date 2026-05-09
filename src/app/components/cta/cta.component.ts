@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-cta',
   standalone: true,
   template: `
+<div class="section-divider" aria-hidden="true"><span class="sd-mark"></span></div>
 <section class="cta"><div class="w">
   <div class="cta-box sr">
     <div class="cta-blob b1"></div>
