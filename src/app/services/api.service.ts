@@ -9,10 +9,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   private headers(): HttpHeaders {
-    const t = localStorage.getItem('bg_token');
-    let h = new HttpHeaders({ 'Content-Type': 'application/json' });
-    if (t) h = h.set('Authorization', 'Bearer ' + t);
-    return h;
+    return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
   private buildParams(params?: Record<string, unknown>): HttpParams {

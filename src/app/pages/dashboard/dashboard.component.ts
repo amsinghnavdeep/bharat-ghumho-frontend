@@ -99,7 +99,7 @@ import { Booking, FareAlert, Favorite } from '../../models';
       <div class="alert-grid">
         <div class="alert-card" *ngFor="let a of alerts()">
           <div class="alert-row">
-            <strong>{{a.from}} → {{a.to}}</strong>
+            <strong>{{a.frm}} → {{a.to}}</strong>
             <button class="bk-btn danger" (click)="removeAlert(a)">Remove</button>
           </div>
           <div class="alert-target">Notify when ≤ {{a.currency}} {{a.target_price}}</div>
@@ -209,10 +209,11 @@ export class DashboardComponent implements OnInit {
 
   loadAll() {
     this.loading.set(true);
-    this.bookingService.list().subscribe(b => this.bookings.set(b));
-    this.favService.list().subscribe(f => this.favorites.set(f));
-    this.alertsService.list().subscribe(a => this.alerts.set(a));
-    this.loading.set(false);
+    let pending = 3;
+    const done = () => { pending--; if (pending === 0) this.loading.set(false); };
+    this.bookingService.list().subscribe(b => { this.bookings.set(b); done(); });
+    this.favService.list().subscribe(f => { this.favorites.set(f); done(); });
+    this.alertsService.list().subscribe(a => { this.alerts.set(a); done(); });
   }
 
   confirmedCount(): number {

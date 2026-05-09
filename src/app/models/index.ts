@@ -210,7 +210,7 @@ export interface FavoriteCreate {
 // ===== FARE ALERT =====
 export interface FareAlert {
   id: string;
-  from: string;
+  frm: string;
   to: string;
   target_price: number;
   currency: string;
@@ -223,6 +223,6 @@ export interface FareAlertCreate {
   frm: string;
   to: string;
   target_price: number;
-  email: string;
   currency?: string;
+  email?: string;
 }
