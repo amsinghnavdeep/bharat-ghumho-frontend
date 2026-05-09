@@ -16,10 +16,16 @@ import { BookingType } from '../../models';
   <div class="w">
     <a routerLink="/dashboard" class="bk-back">← Dashboard</a>
     <h1>Confirm your {{type}}</h1>
-    <div class="bk-stepper">
-      <div class="bk-step" [class.active]="step()==='details'" [class.done]="step()!=='details'">1. Traveler details</div>
-      <div class="bk-step" [class.active]="step()==='review'" [class.done]="step()==='confirmed'">2. Review</div>
-      <div class="bk-step" [class.active]="step()==='confirmed'">3. Confirm</div>
+    <div class="book-stepper" role="list">
+      <div class="book-step" [class.active]="step()==='details'" [class.done]="step()==='review' || step()==='confirmed'" role="listitem">
+        <span class="book-step-num">1</span><div class="book-step-label">Traveler details</div>
+      </div>
+      <div class="book-step" [class.active]="step()==='review'" [class.done]="step()==='confirmed'" role="listitem">
+        <span class="book-step-num">2</span><div class="book-step-label">Review</div>
+      </div>
+      <div class="book-step" [class.active]="step()==='confirmed'" role="listitem">
+        <span class="book-step-num">3</span><div class="book-step-label">Confirmation</div>
+      </div>
     </div>
 
     <div class="bk-grid">

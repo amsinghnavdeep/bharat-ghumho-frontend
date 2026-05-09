@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
 <section class="features" id="features"><div class="w">
   <div class="sec-head sr">
-    <div class="sec-tag sf">Why different</div>
+    <div class="sec-tag gd">Crafted for desis</div>
     <h2 class="sec-title">Built for the way<br>Indians travel.</h2>
     <p class="sec-sub">Not another booking engine. A platform that understands multi-city family trips, wedding season, and 40kg suitcases.</p>
   </div>

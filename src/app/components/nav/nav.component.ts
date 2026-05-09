@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-nav', standalone: true, imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
   template: `
 <nav class="nav" [class.scrolled]="scrolled()">
 <div class="nav-inner">
-  <a routerLink="/" class="logo">
+  <a routerLink="/" class="logo" (click)="closeMobile()">
     <svg class="logo-bird" viewBox="0 0 60 50" fill="none">
       <polygon points="30,2 58,28 42,28" fill="#FF6B00"/>
       <polygon points="30,2 18,28 30,18" fill="#E05E00"/>
@@ -18,16 +19,20 @@ import { ToastService } from '../../services/toast.service';
       <polygon points="30,18 42,28 36,38" fill="#0F6B06"/>
       <path d="M28,30 C28,30 26,34 24,36 C22,38 22,42 26,42 C28,42 30,40 32,38 C34,36 36,34 34,30 C33,28 29,28 28,30Z" fill="white" opacity="0.95"/>
     </svg>
-    <span>Bharat<em>Gumho</em></span>
+    <span>Bharat<em>Ghumho</em></span>
   </a>
   <div class="nav-links">
-    <a routerLink="/flights" routerLinkActive="active" class="nav-link">Flights</a>
-    <a routerLink="/hotels" routerLinkActive="active" class="nav-link">Hotels</a>
-    <a routerLink="/cars" routerLinkActive="active" class="nav-link">Cars</a>
-    <a routerLink="/holidays" routerLinkActive="active" class="nav-link">Holidays</a>
-    <a routerLink="/trip-planner" routerLinkActive="active" class="nav-link">Trip Planner</a>
+    <a routerLink="/flights" routerLinkActive="active" class="nav-link"><span>Flights</span></a>
+    <a routerLink="/hotels" routerLinkActive="active" class="nav-link"><span>Hotels</span></a>
+    <a routerLink="/cars" routerLinkActive="active" class="nav-link"><span>Cars</span></a>
+    <a routerLink="/holidays" routerLinkActive="active" class="nav-link"><span>Holidays</span></a>
+    <a routerLink="/trip-planner" routerLinkActive="active" class="nav-link"><span>Trip Planner</span></a>
   </div>
   <div class="nav-right">
+    <button class="nav-theme-toggle" (click)="theme.toggle()" [title]="theme.theme()==='dark' ? 'Switch to light mode' : 'Switch to dark mode'" aria-label="Toggle theme">
+      <span *ngIf="theme.theme()==='dark'">☀</span>
+      <span *ngIf="theme.theme()==='light'">🌙</span>
+    </button>
     <select class="cur-select" [(ngModel)]="currency" (ngModelChange)="onCurrency()" title="Default currency">
       <option *ngFor="let c of currencies">{{c}}</option>
     </select>
@@ -50,23 +55,50 @@ import { ToastService } from '../../services/toast.service';
       </div>
     </div>
   </div>
-  <button class="hamburger" [class.active]="mobileOpen()" (click)="toggleMobile()"><span></span><span></span><span></span></button>
+  <button class="hamburger" [class.active]="mobileOpen()" (click)="toggleMobile()" aria-label="Open menu"><span></span><span></span><span></span></button>
 </div>
 </nav>
-<div class="mobile-menu" [class.open]="mobileOpen()">
-  <a routerLink="/flights" (click)="closeMobile()">Flights</a>
-  <a routerLink="/hotels" (click)="closeMobile()">Hotels</a>
-  <a routerLink="/cars" (click)="closeMobile()">Cars</a>
-  <a routerLink="/holidays" (click)="closeMobile()">Holidays</a>
-  <a routerLink="/trip-planner" (click)="closeMobile()">Trip Planner</a>
+<div class="drawer-backdrop" [class.open]="mobileOpen()" (click)="closeMobile()"></div>
+<aside class="mobile-drawer" [class.open]="mobileOpen()" role="dialog" aria-label="Navigation menu">
+  <button class="drawer-close" (click)="closeMobile()" aria-label="Close menu">&times;</button>
+  <div class="drawer-brand">
+    <svg width="28" height="24" viewBox="0 0 60 50" fill="none">
+      <polygon points="30,2 58,28 42,28" fill="#FF6B00"/>
+      <polygon points="30,2 18,28 30,18" fill="#E05E00"/>
+      <polygon points="18,28 42,28 52,46 8,46" fill="#138808"/>
+    </svg>
+    <span>Bharat<em style="font-style:normal;background:linear-gradient(135deg,#FF6B00,#D4A843);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Ghumho</em></span>
+  </div>
+  <a routerLink="/flights" routerLinkActive="active" (click)="closeMobile()"><span class="ic">✈</span> Flights</a>
+  <a routerLink="/hotels" routerLinkActive="active" (click)="closeMobile()"><span class="ic">🏨</span> Hotels</a>
+  <a routerLink="/cars" routerLinkActive="active" (click)="closeMobile()"><span class="ic">🚗</span> Cars</a>
+  <a routerLink="/holidays" routerLinkActive="active" (click)="closeMobile()"><span class="ic">🏝</span> Holidays</a>
+  <a routerLink="/trip-planner" routerLinkActive="active" (click)="closeMobile()"><span class="ic">🗺</span> Trip Planner</a>
   <ng-container *ngIf="auth.isAuthenticated()">
-    <a routerLink="/dashboard" (click)="closeMobile()">Dashboard</a>
-    <button class="nav-sign" style="width:100%;margin-top:8px" (click)="closeMobile();logout()">Sign out</button>
+    <div class="drawer-divider"></div>
+    <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMobile()"><span class="ic">📊</span> Dashboard</a>
   </ng-container>
+  <div class="drawer-divider"></div>
+  <div class="drawer-currency">
+    <span>Currency</span>
+    <select [(ngModel)]="currency" (ngModelChange)="onCurrency()">
+      <option *ngFor="let c of currencies">{{c}}</option>
+    </select>
+  </div>
   <ng-container *ngIf="!auth.isAuthenticated()">
-    <button class="nav-cta" style="width:100%;margin-top:16px" (click)="closeMobile();auth.openAuth(true)">Get Started</button>
+    <button class="drawer-cta" (click)="closeMobile();auth.openAuth(true)">Get Started</button>
   </ng-container>
-</div>`,
+  <ng-container *ngIf="auth.isAuthenticated()">
+    <button class="drawer-cta" (click)="closeMobile();logout()">Sign out</button>
+  </ng-container>
+  <div class="drawer-theme">
+    <span>{{theme.theme()==='dark' ? '🌙 Dark mode' : '☀ Light mode'}}</span>
+    <button class="nav-theme-toggle" (click)="theme.toggle()" aria-label="Toggle theme">
+      <span *ngIf="theme.theme()==='dark'">☀</span>
+      <span *ngIf="theme.theme()==='light'">🌙</span>
+    </button>
+  </div>
+</aside>`,
   styles: [`
     .cur-select{padding:8px 10px;border:1px solid #E5E9F0;border-radius:8px;font-size:12px;font-weight:700;background:#fff;color:#0B1120;cursor:pointer;outline:none}
     .cur-select:focus{border-color:#FF6B00}
@@ -90,7 +122,7 @@ export class NavComponent {
   currency = 'CAD';
   currencies = ['CAD', 'USD', 'GBP', 'EUR', 'AED', 'SGD', 'AUD', 'INR'];
 
-  constructor(public auth: AuthService, private router: Router, private toast: ToastService) {
+  constructor(public auth: AuthService, public theme: ThemeService, private router: Router, private toast: ToastService) {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('bg_currency');
       if (stored) this.currency = stored;
@@ -102,9 +134,18 @@ export class NavComponent {
     const t = e.target as HTMLElement;
     if (!t.closest('.user-menu')) this.userOpen.set(false);
   }
+  @HostListener('document:keydown.escape') onEsc() { this.closeMobile(); this.closeUser(); }
 
-  toggleMobile() { this.mobileOpen.update(v => !v); }
-  closeMobile() { this.mobileOpen.set(false); }
+  toggleMobile() {
+    this.mobileOpen.update(v => !v);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = this.mobileOpen() ? 'hidden' : '';
+    }
+  }
+  closeMobile() {
+    this.mobileOpen.set(false);
+    if (typeof document !== 'undefined') document.body.style.overflow = '';
+  }
   toggleUser() { this.userOpen.update(v => !v); }
   closeUser() { this.userOpen.set(false); }
 
